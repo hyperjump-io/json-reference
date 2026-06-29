@@ -5,7 +5,7 @@
 JSON Reference (JRef) is an extension of the [JSON] data interchange format.
 JRef extends [JSON] to add a "reference" type. The spirit of this specification
 is to continue the work started by the [JSON Reference I-D]. This specification
-is 100% compatible with those drafts, but defines things in different way and
+is 100% compatible with those drafts, but defines things in a different way and
 assigns a media type identifier.
 
 ## Media Type
@@ -20,7 +20,7 @@ A [URI fragment] that is empty or starts with a `/` MUST be interpreted as a
 is the JRef value obtained by applying the [JSON Pointer] to the full JRef
 document without following references.
 
-The semantics of a [URI fragment] that isn't a [JSON Pointer] are undefined.
+The semantics of a [URI fragment] that isn't a [JSON Pointer] is undefined.
 
 ### Profiles
 
@@ -40,8 +40,12 @@ either the current document or a different resource.
 ### Syntax
 
 A value that has the syntax of a [JSON] object is considered a "reference" type
-if it has a `$ref` property whose value is of type "string". If either of those
-constraints aren't met, the value is considered a normal [JSON] object.
+if it has a `$ref` property. Otherwise, the value is considered a normal [JSON]
+object.
+
+Properties other than `$ref` are allowed as an extension mechanism, but
+implementations MUST raise an error if they encounter a property don't
+understand.
 
 The semantics of any properties other than `$ref` in a "reference" are
 undefined.
@@ -71,7 +75,7 @@ reference and present the user with the resulting value.
 }
 ```
 
-The value of applying the [JSON Pointer] `/foo` to this document should be 42
+The value of applying the [JSON Pointer] `/foo` to this document should be 42,
 not a reference.
 
 Requesting the value of a reference with a [JSON Pointer] [URI fragment] that
@@ -89,7 +93,7 @@ describing of its media type, implementations MUST respect the declared media
 type. For example, an [HTTP] response for `https://example.com/foo` that has
 `Content-Type: application/json` MUST be treated as a plain [JSON] document
 rather than as a JRef document. That means that any objects with a string
-`$href` property would be of type "object" rather than type "reference".
+`$ref` property would be of type "object" rather than type "reference".
 
 Following a reference may result in media types other than JRef being returned.
 While implementations are not limited to only handling JRef responses, they MUST
